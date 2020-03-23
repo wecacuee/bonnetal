@@ -4,13 +4,13 @@
 #
 
 # CNN stuff
-model_path: "/cache/models/persons/infer"
+model_path: "/home/vdhiman/aux/orcvio-frontend/src/bonnetal/cityscapes_mobilenetsv2_aspp_70_deploy/"
 verbose: true
-backend: "tensorrt" # tf (pytorch, cpu or gpu mode) or tensorrt (TensorRT nvidia gpu)
+backend: "pytorch" # tf (pytorch, cpu or gpu mode) or tensorrt (TensorRT nvidia gpu)
 
 # ROS stuff
 # inputs
-input_image: /usb_cam/image_raw
+input_image: /cam0/image_raw
 # outputs
 output_argmax: /bonnetal/segmentation/argmax
 output_color: /bonnetal/segmentation/color

@@ -7,8 +7,14 @@
  
 <launch>
   <!-- Launch ROS Node for net handler with all the desired parameters-->
+  <node pkg="rosbag" type="play" name="rosbag_play" output="screen"
+        args="--clock /home/vdhiman/dataset/EuRoC_MaV/V1_02_medium.bag">
+  </node>
   <node pkg="bonnetal_segmentation_ros" type="bonnetal_segmentation_node" name="bonnetal_segmentation_node" output="screen">
     <!-- Config -->
     <rosparam command="load" file="$(find bonnetal_segmentation_ros)/config/cfg.yaml" />
+  </node>
+  <node pkg="rqt_image_view" type="rqt_image_view" name="rqt_image_view" output="screen"
+        args="/bonnetal/segmentation/blend" >
   </node>
 </launch>
