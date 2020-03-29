@@ -11,9 +11,9 @@ namespace segmentation {
 template <typename srcT>
 typename std::enable_if<std::is_convertible<srcT, torch::jit::script::Module>::value, void>::type
   torch_jit_module_compat(srcT src,
-                             std::shared_ptr<torch::jit::script::Module>& module) {
+                          std::shared_ptr<torch::jit::script::Module>& module) {
   // Works for pytorch >= 1.2
-  *module = src;
+  module.reset(&src);
 }
 
 void torch_jit_module_compat(const std::shared_ptr<torch::jit::script::Module>& src,
@@ -32,20 +32,18 @@ NetPytorch::NetPytorch(const std::string& model_path) : Net(model_path) {
   // Try to open the model
   std::cout << "Trying to open model" << std::endl;
   try {
-    torch_jit_module_compat(torch::jit::load(_model_path + "/model.pytorch",
-                                             torch::kCUDA),
-                            _module);
+    _module = torch::jit::load(_model_path + "/model.pytorch",
+                               torch::kCUDA);
     _device = std::unique_ptr<torch::Device>(new torch::Device(torch::kCUDA));
   } catch (...) {
     std::cout << "Could not send model to GPU, using CPU" << std::endl;
-    torch_jit_module_compat(torch::jit::load(_model_path + "/model.pytorch",
-                                             torch::kCPU),
-                            _module);
+    _module = torch::jit::load(_model_path + "/model.pytorch",
+                               torch::kCPU);
     _device = std::unique_ptr<torch::Device>(new torch::Device(torch::kCPU));
   }
 
   // Check that it opened and is healthy
-  if (_module != nullptr) {
+  if (true) {
     std::cout << "Successfully opened model" << std::endl;
   } else {
     throw std::runtime_error(
@@ -101,7 +99,7 @@ cv::Mat NetPytorch::infer(const cv::Mat& image) {
   // infer
   std::vector<torch::jit::IValue> inputs;
   inputs.push_back(image_tensor);
-  torch::Tensor logits_tensor = _module->forward(inputs).toTensor();
+  torch::Tensor logits_tensor = _module.forward(inputs).toTensor();
 
   // do argmax
   torch::Tensor argmax_tensor = logits_tensor.argmax(1, false);

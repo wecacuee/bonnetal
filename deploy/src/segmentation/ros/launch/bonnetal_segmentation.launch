@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <!-- 
  * Copyright (c) 2019 Andres Milioto, Cyrill Stachniss, University of Bonn.
  *
@@ -8,13 +9,15 @@
 <launch>
   <!-- Launch ROS Node for net handler with all the desired parameters-->
   <node pkg="rosbag" type="play" name="rosbag_play" output="screen"
-        args="--clock /home/vdhiman/dataset/EuRoC_MaV/V1_02_medium.bag">
+        args="--clock /home/vdhiman/aux/orcvio-frontend/arl_husky_overpasscity.bag">
   </node>
-  <node pkg="bonnetal_segmentation_ros" type="bonnetal_segmentation_node" name="bonnetal_segmentation_node" output="screen">
+  <node pkg="bonnetal_segmentation_ros" type="bonnetal_segmentation_node" name="bonnetal_segmentation_node"
+        output="screen"
+        launch-prefix="xterm -e gdb -ex run -args" >
     <!-- Config -->
     <rosparam command="load" file="$(find bonnetal_segmentation_ros)/config/cfg.yaml" />
   </node>
   <node pkg="rqt_image_view" type="rqt_image_view" name="rqt_image_view" output="screen"
-        args="/bonnetal/segmentation/blend" >
+        args="/bonnetal/segmentation/argmax" >
   </node>
 </launch>

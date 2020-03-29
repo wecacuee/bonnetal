@@ -50,7 +50,7 @@ class NetPytorch : public Net {
 
  protected:
   // Deserialize the ScriptModule from a file using torch::jit::load().
-  std::shared_ptr<torch::jit::script::Module> _module;
+  torch::jit::script::Module _module;
 
   // device for inference
   std::unique_ptr<torch::Device> _device;
