@@ -7,8 +7,27 @@
  
 <launch>
   <!-- Launch ROS Node for net handler with all the desired parameters-->
-  <node pkg="bonnetal_segmentation_ros" type="bonnetal_segmentation_node" name="bonnetal_segmentation_node" output="screen">
+  <arg name="outdata_dir" default="/home/vdhiman/aux/orcvio-frontend/data/arl/arl_husky_overpasscity" />
+  <node pkg="rosbag" type="play" name="rosbag_play" output="screen"
+    required="true"
+    args="--clock $(arg outdata_dir).bag">
+  </node>
+  <node pkg="bonnetal_segmentation_ros" type="bonnetal_segmentation_node" name="bonnetal_segmentation_node"
+    output="screen">
     <!-- Config -->
     <rosparam command="load" file="$(find bonnetal_segmentation_ros)/config/cfg.yaml" />
+  </node>
+  <node pkg="rqt_image_view" type="rqt_image_view" name="rqt_image_view" output="screen"
+        args="/bonnetal/segmentation/blend" >
+  </node>
+  <node pkg="image_view" type="extract_images" name="extract_images_bonnetal_segmentation">
+    <remap from="image" to="/bonnetal/segmentation/blend" />
+    <param name="filename_format" value="$(arg outdata_dir)/arl_husky_overpasscity_bonnetal_segmentation_%04d.jpg" />
+    <param name="sec_per_frame" value="0.1"  />
+  </node>
+  <node pkg="image_view" type="extract_images" name="extract_images_raw">
+    <remap from="image" to="/husky/camera/image_raw" />
+    <param name="filename_format" value="$(arg outdata_dir)/arl_husky_overpasscity_raw_%04d.jpg" />
+    <param name="sec_per_frame" value="0.1"  />
   </node>
 </launch>
