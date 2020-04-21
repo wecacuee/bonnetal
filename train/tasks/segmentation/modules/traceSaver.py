@@ -157,5 +157,5 @@ class TraceSaver():
     """Export config file, ONNX model, and Pytorch traced model to log directory
     """
     self.export_config()
-    self.export_ONNX()
     self.export_pytorch()
+    self.export_ONNX()

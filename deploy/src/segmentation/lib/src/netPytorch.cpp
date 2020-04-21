@@ -13,6 +13,7 @@ typename std::enable_if<std::is_convertible<srcT, torch::jit::script::Module>::v
   torch_jit_module_compat(srcT src,
                              std::shared_ptr<torch::jit::script::Module>& module) {
   // Works for pytorch >= 1.2
+  module.reset(new srcT());
   *module = src;
 }
 

@@ -13,11 +13,12 @@
     args="--clock $(arg outdata_dir).bag">
   </node>
   <node pkg="bonnetal_segmentation_ros" type="bonnetal_segmentation_node" name="bonnetal_segmentation_node"
+    required="true"
     output="screen">
     <!-- Config -->
     <rosparam command="load" file="$(find bonnetal_segmentation_ros)/config/cfg.yaml" />
   </node>
-  <node pkg="rqt_image_view" type="rqt_image_view" name="rqt_image_view" output="screen"
+  <node pkg="image_view" type="image_view" name="image_view" output="screen"
         args="/bonnetal/segmentation/blend" >
   </node>
   <node pkg="image_view" type="extract_images" name="extract_images_bonnetal_segmentation">
