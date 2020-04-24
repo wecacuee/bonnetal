@@ -163,7 +163,7 @@ int main(int argc, const char *argv[]) {
           /*isColor=*/true));
 
       fs::path blend_videop(video);
-      blend_videop.replace_extension(".segmentation-blend." + orig_ext);
+      blend_videop.replace_extension(".segmentation-blend" + orig_ext);
       blend_writer = std::unique_ptr<cv::VideoWriter>(new cv::VideoWriter(
           blend_videop.string(), cv::VideoWriter::fourcc('M', 'J', 'P', 'G'),
           /*fps=*/cap->get(CV_CAP_PROP_FPS), blend_mask.size(),
