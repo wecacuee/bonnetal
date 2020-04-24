@@ -22,8 +22,8 @@
         args="/bonnetal/segmentation/blend" >
   </node>
   <node pkg="image_view" type="extract_images" name="extract_images_bonnetal_segmentation">
-    <remap from="image" to="/bonnetal/segmentation/blend" />
-    <param name="filename_format" value="$(arg outdata_dir)/arl_husky_overpasscity_bonnetal_segmentation_%04d.jpg" />
+    <remap from="image" to="/bonnetal/segmentation/color" />
+    <param name="filename_format" value="$(arg outdata_dir)/arl_husky_overpasscity_bonnetal_segmentation_color_%04d.jpg" />
     <param name="sec_per_frame" value="0.1"  />
   </node>
   <node pkg="image_view" type="extract_images" name="extract_images_raw">

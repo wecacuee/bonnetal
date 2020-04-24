@@ -4,7 +4,7 @@
 #
 
 # CNN stuff
-model_path: "/home/vdhiman/aux/orcvio-frontend/src/bonnetal/cityscapes_darknet53_aspp_res_1024_os8_73_deploy/"
+model_path: "/home/vdhiman/aux/orcvio-frontend/src/bonnetal/cityscapes_mobilenetsv2_aspp_70_deploy/"
 verbose: true
 backend: "pytorch" # tf (pytorch, cpu or gpu mode) or tensorrt (TensorRT nvidia gpu)
 

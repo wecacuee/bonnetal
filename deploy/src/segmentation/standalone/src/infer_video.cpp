@@ -101,6 +101,8 @@ int main(int argc, const char *argv[]) {
 
   // open capture
   std::unique_ptr<cv::VideoCapture> cap;
+  std::unique_ptr<cv::VideoWriter> color_writer;
+  std::unique_ptr<cv::VideoWriter> blend_writer;
   if (video == "") {
     std::cout << "Opening webcam for prediction." << std::endl;
     cap = std::unique_ptr<cv::VideoCapture>(new cv::VideoCapture(0));
@@ -148,6 +150,30 @@ int main(int argc, const char *argv[]) {
       cv::imshow("Mask", color_mask);   // Show our image inside
       cv::imshow("Blend", blend_mask);  // Show our image inside
       cv::waitKey(1);
+    }
+
+
+    if (video != "" && ( !  (color_writer && blend_writer))) {
+      fs::path color_videop(video);
+      std::string orig_ext = color_videop.extension().string();
+      color_videop.replace_extension(".segmentation-color" + orig_ext);
+      color_writer = std::unique_ptr<cv::VideoWriter>(new cv::VideoWriter(
+          color_videop.string(), cv::VideoWriter::fourcc('M', 'J', 'P', 'G'),
+          /*fps=*/cap->get(CV_CAP_PROP_FPS), color_mask.size(),
+          /*isColor=*/true));
+
+      fs::path blend_videop(video);
+      blend_videop.replace_extension(".segmentation-blend." + orig_ext);
+      blend_writer = std::unique_ptr<cv::VideoWriter>(new cv::VideoWriter(
+          blend_videop.string(), cv::VideoWriter::fourcc('M', 'J', 'P', 'G'),
+          /*fps=*/cap->get(CV_CAP_PROP_FPS), blend_mask.size(),
+          /*isColor=*/true));
+    }
+    if (color_writer->isOpened()) {
+      color_writer->write(color_mask);
+    }
+    if (blend_writer->isOpened()) {
+      blend_writer->write(blend_mask);
     }
     std::cout << std::setfill('=') << std::setw(80) << "" << std::endl;
   }
