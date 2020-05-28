@@ -18,26 +18,28 @@ def generate_label_legends(config='cfg.yaml'):
     all_label_legends = []
     for idx, label in cfg['dataset']['labels'].items():
         label_legend = generate_one_label_legend(label, cfg['dataset']['color_map'][idx])
-        cv2.imwrite(os.path.splitext(config )[0] + label + ".png", label_legend)
+        # cv2.imwrite(os.path.splitext(config )[0] + label + ".png", label_legend)
         all_label_legends.append(label_legend)
     if not len(all_label_legends):
         return
+    bigimg = arrange_legends_on_bigimg(all_label_legends)
+    cv2.imwrite(os.path.splitext(config)[0] + "_legend.png", bigimg)
+
+
+def arrange_legends_on_bigimg(all_label_legends, desired_ratio=np.array((100,700))):
     legend_dims = np.array((all_label_legends[0].shape[0], all_label_legends[0].shape[1]))
-    desired_ratio = np.array((3, 4))
     n_ratio = desired_ratio / legend_dims
     number = len(all_label_legends)
     nimgs = np.int64(np.ceil(n_ratio * np.sqrt(number / np.prod(n_ratio))))
     bigimg = np.ones(np.int64((all_label_legends[0].shape[:2] * nimgs).tolist() + [3]), dtype='u1')
     for r in range(nimgs[0]):
         for c in range(nimgs[1]):
-            idx = r*nimgs[1]+c 
+            idx = r*nimgs[1]+c
             if (idx >= number):
                 break
             bigimg[r*legend_dims[0]:(r+1)*legend_dims[0],
                    c*legend_dims[1]:(c+1)*legend_dims[1], :] = all_label_legends[idx]
-
-    cv2.imwrite(os.path.splitext(config)[0] + "_legend.png", bigimg)
-
+    return bigimg
 
 
 if __name__ == '__main__':
